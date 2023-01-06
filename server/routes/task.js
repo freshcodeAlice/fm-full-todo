@@ -6,7 +6,7 @@ taskRouter.post('/', TaskController.createUserTask);
 taskRouter.get('/:userId', TaskController.getAllUserTasks); 
 
 
-module.exports = userRouter;
+module.exports = taskRouter;
 
 
 

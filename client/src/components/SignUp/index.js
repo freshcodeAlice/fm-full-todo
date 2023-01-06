@@ -1,7 +1,7 @@
 import React from 'react';
 import {Formik, Form, Field} from 'formik';
 import {format} from 'date-fns';
-import {registerUser} from '../../api/index';
+import {registerUser} from '../../api/userApi';
 
 const SignUp = (props) => {
 

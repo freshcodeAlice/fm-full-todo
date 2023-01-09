@@ -7,7 +7,6 @@ const userRouter = Router();
 userRouter.post('/sign-up', hashPass, UserController.registrationUser); //register
 userRouter.post('/sign-in', hashPass, UserController.loginUser); //login
 
-
 module.exports = userRouter;
 
 

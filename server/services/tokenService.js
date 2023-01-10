@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const promisifyJWTSign = promisify(jwt.sign);
 const promisifyJWTVerify = promisify(jwt.verify);
 
-const EXPIRES_TIME = 60*60;
+const EXPIRES_TIME = 60;
 
 const secret = 'qwerty';
 

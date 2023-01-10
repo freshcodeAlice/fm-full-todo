@@ -11,7 +11,7 @@ module.exports.errorHandler = async (err, req, res, next) => {
       }
 
       if (err instanceof JsonWebTokenError || err instanceof TokenExpiredError) {
-        return res.status(403).send('Invalid token');
+        return res.status(403).send({err: err.message});
       }
   
       return res.status(500).send(err.message);

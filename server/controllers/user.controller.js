@@ -1,5 +1,6 @@
 const {User} = require('../models'); 
 const bcrypt = require('bcrypt');
+const {createToken, verifyToken} = require('../services/tokenService');
 
 module.exports.registrationUser = async (req, res, next) => {
     try {
@@ -22,8 +23,10 @@ module.exports.loginUser = async (req, res, next) => {
             });
             if (foundUser) {
                 const result = await bcrypt.compare(passwordHash, foundUser.passwordHash);
-                ///TODO: send user without his password
-                res.status(200).send({data: foundUser})
+                const token = await createToken({userId: foundUser._id, email: foundUser.email});
+                console.log(token);
+
+                // res.status(200).send({data: foundUser})
             } 
              } catch(error) {
                 next(error);
@@ -31,3 +34,12 @@ module.exports.loginUser = async (req, res, next) => {
 
 }
 
+module.exports.checkToken = async(req, res, next) => {
+    try {
+        const {params: {token}} = req;
+        const result = await verifyToken(token);
+        console.log(result);
+    } catch(error) {
+        next(error);
+    }
+}

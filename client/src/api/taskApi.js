@@ -1,7 +1,7 @@
 import CONSTANTS from '../constants';
 
 
-export const getTasks = async (userId) => {
+export const getTasks = async () => {
     const token = localStorage.getItem('token');
     const responce = await fetch(`${CONSTANTS.API_BASE}/tasks/`, {
         method: 'GET',

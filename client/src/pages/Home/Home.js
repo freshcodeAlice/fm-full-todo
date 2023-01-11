@@ -3,12 +3,13 @@ import { useNavigate} from "react-router-dom";
 import SignIn from '../../components/SignIn';
 import SignUp from '../../components/SignUp';
 import styles from './Home.module.css';
+import history from '../../BrowserHistory';
 
 const Home = (props) => {
     const [state, setState] = useState(true);
     // const [data, setData] = useState();
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
+     const navigate = useNavigate();
     
     // useEffect(() => {
     //     if(data) {
@@ -34,7 +35,7 @@ const Home = (props) => {
             props.sendUser(result.data);
             ///token -> localStorage
             localStorage.setItem('token', result.tokens.token);
-            navigate('/tasks');
+            navigate('/tasks')
         })
         .catch(err => {
            setError(err);

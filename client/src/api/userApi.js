@@ -47,7 +47,7 @@ export const authUser = async (token) => {
     });
     if (res.status === 403) {
         const error = await res.json();
-        // history.replace('/');
+         history.push('/');
         return Promise.reject(error);
     }
 

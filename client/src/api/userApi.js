@@ -1,7 +1,7 @@
 import CONSTANTS from '../constants';
 
 export const registerUser = async (data) => {
-    const responce = await fetch(`${CONSTANTS.API_BASE}/user/sign-up`, {
+    const responce = await fetch(`${CONSTANTS.API_BASE}/users/sign-up`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -20,7 +20,7 @@ export const registerUser = async (data) => {
 
 
 export const loginUser = async (data) => {
-    const responce = await fetch(`${CONSTANTS.API_BASE}/user/sign-in`, {
+    const responce = await fetch(`${CONSTANTS.API_BASE}/users/sign-in`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -38,7 +38,12 @@ export const loginUser = async (data) => {
 
 
 export const authUser = async (token) => {
-    const res = await fetch(`${CONSTANTS.API_BASE}/user/${token}`);
+    const res = await fetch(`${CONSTANTS.API_BASE}/users/`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
     if (res.status === 403) {
         const error = await res.json();
         return Promise.reject(error);

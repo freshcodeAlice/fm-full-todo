@@ -1,12 +1,13 @@
 const {User} = require('../models'); 
 const bcrypt = require('bcrypt');
-const {createToken, verifyToken} = require('../services/tokenService');
+const {createAccessToken, verifyAccessToken} = require('../services/tokenService');
 
 module.exports.registrationUser = async (req, res, next) => {
     try {
         const {body, passwordHash} = req;
         console.log(body);
         const createdUser = await User.create({...body, passwordHash});
+        const token = await createAccessToken({userId: foundUser._id, email: foundUser.email});
         res.status(200).send({data: createdUser, tokens: {token}})
     } catch(error) {
         next(error);
@@ -22,8 +23,13 @@ module.exports.loginUser = async (req, res, next) => {
             });
             if (foundUser) {
                 const result = await bcrypt.compare(passwordHash, foundUser.passwordHash);
-                const token = await createToken({userId: foundUser._id, email: foundUser.email});
-                 res.status(200).send({data: foundUser, tokens: {token}})
+                // console.log(result);
+                // if(result) {
+                    const token = await createAccessToken({userId: foundUser._id, email: foundUser.email});
+                    res.status(200).send({data: foundUser, tokens: {token}})
+                // } else {
+                //     res.status(400).send({error: 'Invalid credentials'});
+                // }
             } 
              } catch(error) {
                 next(error);
@@ -59,4 +65,6 @@ module.exports.refreshSession = async (req, res, next) => {
                 - якщо РТ невалідний, то перенаправляємо користувача на авторизацію
 
     */
+
+    
 }

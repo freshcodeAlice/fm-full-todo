@@ -1,4 +1,5 @@
 const {User, RefreshToken} = require('../models'); 
+const RefreshTokenError = require('../errors/RefreshTokenError');
 const bcrypt = require('bcrypt');
 const {createAccessToken, verifyAccessToken, createRefreshToken, verifyRefreshToken} = require('../services/tokenService');
 
@@ -28,6 +29,7 @@ module.exports.loginUser = async (req, res, next) => {
                     const accessToken = await createAccessToken({userId: foundUser._id, email: foundUser.email});
                     const refreshToken = await createRefreshToken({userId: foundUser._id, email: foundUser.email});
                         //TODO: add RT to DataBase
+
                     const addedToken = await RefreshToken.create({
                                             token: refreshToken, 
                                             userId: foundUser._id});
@@ -72,11 +74,17 @@ module.exports.refreshSession = async (req, res, next) => {
                 - якщо РТ невалідний, то перенаправляємо користувача на авторизацію
 
     */
-   try {
-    const {body: {refreshToken}} = req;
-    const result = await verifyRefreshToken(refreshToken);
-    if (result) {
-        const foundUser = await User.findOne({email: result.email});      
+
+    const {body, body: {refreshToken}} = req;
+    let verifyResult;
+    try {
+        verifyResult = await verifyRefreshToken(refreshToken);
+    } catch(err) {
+       next(new RefreshTokenError('Invalid refresh token'));        
+    }
+    try {
+    if (verifyResult) {
+        const foundUser = await User.findOne({email: verifyResult.email});      
         const rTFromDB = await RefreshToken.findOne({$and: [{token: refreshToken}, {userId: foundUser._id}]});
         if(rTFromDB) {
             const removeResult = await rTFromDB.remove();
@@ -91,8 +99,6 @@ module.exports.refreshSession = async (req, res, next) => {
         }
 
         
-    } else {
-        res.status(401).send({error: 'Invalid token'})
     }
     } catch(error) {
         next(error)

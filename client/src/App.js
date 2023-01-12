@@ -12,10 +12,8 @@ function App() {
 
   useEffect(() => {
     if(!user) {
-        const token = localStorage.getItem('token');
-        if (token) {
             //// робимо запит на отримання юзера
-            authUser(token)
+            authUser()
             .then(userData => {
               // props.sendUser(userData.data);
               setUser(userData.data);
@@ -24,13 +22,9 @@ function App() {
                 console.log('INVALID');
                 history.push('/');
             })
-        } else {
-            //перенаправляємо на авторизацію
-            history.push('/');
         }
-    }
    
-}, [user]);
+}, []);
 
 
   return (

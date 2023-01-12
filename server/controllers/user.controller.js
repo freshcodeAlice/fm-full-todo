@@ -1,6 +1,6 @@
-const {User} = require('../models'); 
+const {User, RefreshToken} = require('../models'); 
 const bcrypt = require('bcrypt');
-const {createAccessToken, verifyAccessToken} = require('../services/tokenService');
+const {createAccessToken, verifyAccessToken, createRefreshToken, verifyRefreshToken} = require('../services/tokenService');
 
 module.exports.registrationUser = async (req, res, next) => {
     try {
@@ -25,8 +25,15 @@ module.exports.loginUser = async (req, res, next) => {
                 const result = await bcrypt.compare(passwordHash, foundUser.passwordHash);
                 // console.log(result);
                 // if(result) {
-                    const token = await createAccessToken({userId: foundUser._id, email: foundUser.email});
-                    res.status(200).send({data: foundUser, tokens: {token}})
+                    const accessToken = await createAccessToken({userId: foundUser._id, email: foundUser.email});
+                    const refreshToken = await createRefreshToken({userId: foundUser._id, email: foundUser.email});
+                        //TODO: add RT to DataBase
+                    const addedToken = await RefreshToken.create({
+                                            token: refreshToken, 
+                                            userId: foundUser._id});
+                        //TODO: check if creating successfull
+                        // TODO: check, how much tokens is already use
+                    res.status(200).send({data: foundUser, tokens: {accessToken, refreshToken}})
                 // } else {
                 //     res.status(400).send({error: 'Invalid credentials'});
                 // }
@@ -65,6 +72,29 @@ module.exports.refreshSession = async (req, res, next) => {
                 - якщо РТ невалідний, то перенаправляємо користувача на авторизацію
 
     */
+   try {
+    const {body: {refreshToken}} = req;
+    const result = await verifyRefreshToken(refreshToken);
+    if (result) {
+        const foundUser = await User.findOne({email: result.email});      
+        const rTFromDB = await RefreshToken.findOne({$and: [{token: refreshToken}, {userId: foundUser._id}]});
+        if(rTFromDB) {
+            const removeResult = await rTFromDB.remove();
+             const newAccessToken = await createAccessToken({userId: foundUser._id, email: foundUser.email});
+             const newRefreshToken = await createRefreshToken({userId: foundUser._id, email: foundUser.email});
+            const addedToken = await RefreshToken.create({
+                                            token: refreshToken, 
+                                            userId: foundUser._id});  
+                                            
+         res.status(200).send({tokens: {accessToken: newAccessToken,
+                                refreshToken: newRefreshToken}});
+        }
 
-    
+        
+    } else {
+        res.status(401).send({error: 'Invalid token'})
+    }
+    } catch(error) {
+        next(error)
+    }
 }

@@ -1,12 +1,14 @@
 import CONSTANTS from '../constants';
 import history from '../BrowserHistory';
+import {refreshSession} from './userApi';
 
 export const getTasks = async () => {
-    const token = localStorage.getItem('token');
+    console.log('get tasks');
+    const accessToken = localStorage.getItem('accessToken');
     const responce = await fetch(`${CONSTANTS.API_BASE}/tasks/`, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${accessToken}`
         }
     });
     if (responce.status === 400) {
@@ -14,22 +16,25 @@ export const getTasks = async () => {
         return Promise.reject(error);
        }
        if (responce.status === 403) {
-        const error = await responce.json();
-         history.push('/');
-        return Promise.reject(error);
-    }
+        console.log('HERE WE GO');
+        await refreshSession();
+        return await getTasks();
+//        const error = await responce.json();
+ //        history.push('/');
+ //       return Promise.reject(error);
+        }
        return responce.json();
    
 }
 
 
 export const createTask = async (data) => {
-    const token = localStorage.getItem('token');
+    const accessToken = localStorage.getItem('accessToken');
     const responce = await fetch(`${CONSTANTS.API_BASE}/tasks`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${accessToken}`
           },
           body: JSON.stringify(data)
     });
@@ -38,9 +43,11 @@ export const createTask = async (data) => {
      return Promise.reject(error);
     }
     if (responce.status === 403) {
-        const error = await responce.json();
-         history.push('/');
-        return Promise.reject(error);
+        await refreshSession();
+        return await createTask(data); 
+ //       const error = await responce.json();
+       //  history.push('/');
+ //       return Promise.reject(error);
     }
 
 

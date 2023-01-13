@@ -6,7 +6,6 @@ const promisifyJWTSign = promisify(jwt.sign);
 const promisifyJWTVerify = promisify(jwt.verify);
 
 
-
 module.exports.createAccessToken = async ({userId, email}) => 
         await promisifyJWTSign({userId, email}, ACCESS_SECRET, {
                     expiresIn: ACCESS_EXPIRES_TIME

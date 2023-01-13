@@ -32,38 +32,21 @@ export const loginUser = async (userInput) => {
         const error = await res.json();
         return Promise.reject(error);
        }
+    
    
     const {data, tokens} = await res.json(); /// {data: {}, tokens: {}}
        ///tokens -> localStorage
+       console.log(tokens);
       localStorage.setItem('accessToken', tokens.accessToken);
       localStorage.setItem('refreshToken', tokens.refreshToken);
-
+       
       return data;
    
 }
 
 
-export const authUser = async () => {
-    const accessToken = localStorage.getItem('accessToken'); 
-    if(accessToken) {
-        const res = await fetch(`${CONSTANTS.API_BASE}/users/`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        });
-        if (res.status === 403) {
-            await refreshSession();
-        }
-    
-        return res.json();
-    } else {
-        history.replace('/');
-    }
-   
-}
-
-async function refreshSession () {
+export const refreshSession = async () => {
+    console.log('REFRESH');
     const refreshToken = localStorage.getItem('refreshToken');
     const res = await fetch(`${CONSTANTS.API_BASE}/users/refresh`, {
         method: 'POST',
@@ -73,12 +56,37 @@ async function refreshSession () {
         body: JSON.stringify({refreshToken})
     });
     if (res.status === 401) {
+        console.log('refresh failed');
        return history.replace('/');
     } 
-
-    const tokenPair = await res.json();
-    console.log(tokenPair);
-    localStorage.setItem('refreshToken', tokenPair.refreshToken);
-    localStorage.setItem('accessToken', tokenPair.accessToken);
+    console.log(res.status);
+    const {tokens} = await res.json();
+    console.log(tokens);
+    localStorage.setItem('refreshToken', tokens.refreshToken);
+    localStorage.setItem('accessToken', tokens.accessToken);
     return;
 }
+
+
+export const authUser = async () => {
+    const accessToken = localStorage.getItem('accessToken'); 
+    if(accessToken) {
+        console.log(accessToken);
+        const res = await fetch(`${CONSTANTS.API_BASE}/users/`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+        if (res.status === 403) {
+            await refreshSession();
+            return await authUser();
+        } else {
+            return res.json();
+        }
+    } else {
+        history.replace('/');
+    }
+   
+}
+

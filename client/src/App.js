@@ -19,7 +19,6 @@ function App() {
               setUser(userData.data);
             }).catch(error => {
                 // якщо токен невалідний - перенаправляємо на авторизацію
-                console.log('INVALID');
                 history.push('/');
             })
         }

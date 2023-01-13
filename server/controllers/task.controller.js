@@ -31,16 +31,16 @@ module.exports.deleteTask = async (req, res, next) => {
     try {
         const {params: {taskId}, tokenPayload: {userId}} = req;
         const foundTask = await Task.findOne({authorId: userId, _id: taskId});
-       
+        console.log('userID: ', userId);
+        console.log(foundTask);
         if (foundTask) {
           const deleted = await foundTask.remove();
+          console.log(deleted);
             if (deleted) {
-             res.status(200).send(deleted);
-                } else {
-                    res.status(404).send();
+             res.status(200).send({data: deleted});
                 }
         } else {
-            res.status(400).send('AuthorId is not correct');
+            res.status(404).send({error: 'Task not found'});
         }
         
     } catch(error) {

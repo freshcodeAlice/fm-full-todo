@@ -7,7 +7,7 @@ const TodoList = (props) => {
         <>
 
         <ul>
-            {props.todos.map(td => <ToDoItem item={td} key={td._id}/>)}
+            {props.todos.map(td => <ToDoItem item={td} key={td._id} delete={props.delCallback}/>)}
         </ul>
         </>
     );

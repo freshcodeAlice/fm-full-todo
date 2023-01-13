@@ -3,5 +3,5 @@ module.exports = {
     REFRESH_SECRET: 'ytrewq',
     ACCESS_SECRET: 'qwerty',
     REFRESH_EXPIRES_TIME: 60*60,
-    ACCESS_EXPIRES_TIME: 60
+    ACCESS_EXPIRES_TIME: 200
 }

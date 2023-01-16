@@ -11,17 +11,17 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if(!user) {
-            //// робимо запит на отримання юзера
-            authUser()
-            .then(userData => {
-              // props.sendUser(userData.data);
-              setUser(userData.data);
-            }).catch(error => {
-                // якщо токен невалідний - перенаправляємо на авторизацію
-                history.push('/');
-            })
-        }
+    // if(!user) {
+    //         //// робимо запит на отримання юзера
+    //         authUser()
+    //         .then(userData => {
+    //           // props.sendUser(userData.data);
+    //           setUser(userData.data);
+    //         }).catch(error => {
+    //             // якщо токен невалідний - перенаправляємо на авторизацію
+    //             history.push('/');
+    //         })
+    //     }
    
 }, []);
 

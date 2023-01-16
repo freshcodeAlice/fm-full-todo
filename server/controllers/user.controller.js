@@ -27,7 +27,7 @@ module.exports.loginUser = async (req, res, next) => {
             console.log(passwordHash);
             const result = await bcrypt.compare(body.password, foundUser.passwordHash);
             console.log(result);
-            // if(result) {
+             if(result) {
             const accessToken = await createAccessToken({ userId: foundUser._id, email: foundUser.email });
             const refreshToken = await createRefreshToken({ userId: foundUser._id, email: foundUser.email });
             //TODO: add RT to DataBase
@@ -39,9 +39,9 @@ module.exports.loginUser = async (req, res, next) => {
             //TODO: check if creating successfull
             // TODO: check, how much tokens is already use
             res.status(200).send({ data: foundUser, tokens: { accessToken, refreshToken } })
-            // } else {
-            //     res.status(400).send({error: 'Invalid credentials'});
-            // }
+             } else {
+                 res.status(400).send({error: 'Invalid credentials'});
+             }
         }
     } catch (error) {
         next(error);

@@ -2,6 +2,24 @@ import CONSTANTS from '../constants';
 import history from '../BrowserHistory';
 import {refreshSession} from './userApi';
 
+
+
+/*
+const axiosClient = new axios({
+  baseURL: CONSTANTS.API_BASE,
+});
+
+
+
+
+
+
+axiosClient.get('/tasks/', {
+     headers: {'Authorization': `Bearer ${accessToken}`},
+})
+
+*/
+
 export const getTasks = async () => {
     console.log('get tasks');
     const accessToken = localStorage.getItem('accessToken');

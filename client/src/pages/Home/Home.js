@@ -11,29 +11,15 @@ const Home = (props) => {
     const [error, setError] = useState(null);
      const navigate = useNavigate();
     
-    // useEffect(() => {
-    //     if(data) {
-    //         registerUser(data)
-    //         .then(result => {
-    //             props.sendUser(result);
-    //             navigate('/tasks');
-    //         })
-    //         .catch(err => {
-    //            setError(err);
-    //         })
-    //     }
-    // }, [data]);
-    
     const buttonHandler = () => {
         setState(state => !state);
     } 
 
     const getData = ({callback, values}) => {
-        // setData(userData);
         callback(values)
-        .then(result => {
-            props.sendUser(result);
-            navigate('/tasks')
+        .then(({data: {data}}) => {
+            props.sendUser(data);
+            navigate('/tasks');
         })
         .catch(err => {
            setError(err);

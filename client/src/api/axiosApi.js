@@ -6,6 +6,22 @@ const instance = axios.create({
     baseURL: CONSTANTS.API_BASE
 });
 
+
+
+/* Auth API */
+
+export const refreshUser = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    const {data} = await instance.post('/users/refresh', {refreshToken})
+    return data;
+}
+
+export const registerUser = async (userData) => await instance.post('/users/sign-up', userData);
+
+export const loginUser = async (userData) => await instance.post('/users/sign-in', userData);
+
+
+
 instance.interceptors.request.use((config) => {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
@@ -27,7 +43,10 @@ instance.interceptors.response.use((response) => {
     return response
 }, (err) => {
     if (err.response.status === 403 && localStorage.getItem('refreshToken')) {
-        refreshUser()
+    //    refreshUser().then((data) => {
+    //        console.log(err.request.open());
+    //    });
+        refreshUser();
     }
     if (err.response.status === 401) {
         history.replace('/');
@@ -35,18 +54,6 @@ instance.interceptors.response.use((response) => {
 
     return Promise.reject(err);
 })
-
-/* Auth API */
-
-export const refreshUser = async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
-    const {data} = await instance.post('/users/refresh', {refreshToken})
-    return data;
-}
-
-export const registerUser = async (userData) => await instance.post('/users/sign-up', userData);
-
-export const loginUser = async (userData) => await instance.post('/users/sign-in', userData);
 
 
 /* Task API */

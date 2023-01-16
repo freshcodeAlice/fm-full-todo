@@ -4,7 +4,7 @@
 yield - ключево слово для зупинки функції-генератора
 */
 
-
+/*
 function* generate() {
     console.log(1);
     console.log(2);
@@ -21,6 +21,7 @@ const res1 = iter.next();
 console.log(res1);
 const res2 = iter.next(5);
 console.log(res2);
+*/
 
 /*
 Завдання: написати функцію-генератор, яка генерує числа від 0 до 100.
@@ -31,3 +32,23 @@ console.log(res2);
 
 
 //for кожне наступне значення of перебираєма колекція
+
+
+function* genOneTo100() {
+    let score = 0;
+    while (score < 100) {
+        yield score++;
+    }
+    return 100;
+}
+
+const it = genOneTo100();
+// console.log(it.next());
+
+
+let sum = 0;
+for (num of it) {
+    sum += num;
+} 
+
+console.log(sum);

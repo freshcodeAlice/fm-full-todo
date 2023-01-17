@@ -1,11 +1,25 @@
+import ACTION_TYPES from './actionTypes';
+
 export const incrementAction = () => {
     return ({
-        type: 'COUNTER_PLUS'
+        type: ACTION_TYPES.INCREMENT
     })
 }
 
 export const decrementAction = () => {
     return ({
-        type: 'COUNTER_MINUS'
+        type: ACTION_TYPES.DECREMENT
+    })
+}
+
+
+
+////  (value) => {type:..., value}
+
+
+export const changeStepAction = (value) => {
+    return ({
+        type: 'STEP_CHANGE',
+        value
     })
 }

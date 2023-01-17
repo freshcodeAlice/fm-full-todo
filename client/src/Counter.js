@@ -1,6 +1,6 @@
 import React, {useReducer} from 'react';
 import {connect} from 'react-redux';
-import {incrementAction, decrementAction} from './actions/actionCreator';
+import {incrementAction, decrementAction, changeStepAction} from './actions/actionCreator';
 
 
 
@@ -15,10 +15,18 @@ const Counter = (props) => {
     // }
     
     console.log(props);
+
+    const onChangeStep = ({target: {value}}) => {
+        props.changeStep(Number(value))
+    }
+
+
+
     return (
         <>
             <h1>{props.counter}</h1>
-             <button onClick={props.increment}>+</button>
+            <input type="number" name="step" onChange={onChangeStep} value={props.step}/>
+            <button onClick={props.increment}>+</button>
             <button onClick={props.decrement}>-</button>
         </>
     )
@@ -39,15 +47,17 @@ const mapStateToProps = (state) => {
 
 // const mapDispatchToProps = (dispatch) => {
 //     return {
-//         increment: () => dispatch(createActionIncrement()),
-//         decrement: () => dispatch(createActionDecrement())
+//         increment: () => dispatch(incrementAction()),
+//         decrement: () => dispatch(decrementAction()),
+//         changeStep: (value) => dispatch(changeStepAction(value))
 //     }
 // }
 
 
 const mapDispatchToProps = {
    increment: incrementAction, 
-   decrement: decrementAction
+   decrement: decrementAction,
+   changeStep: changeStepAction
 }
 
 const WrappedCounter = connect(mapStateToProps, mapDispatchToProps)(Counter);

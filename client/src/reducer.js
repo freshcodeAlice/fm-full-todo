@@ -19,7 +19,7 @@ const reducer = (state = initialState, action) => {
           counter: state.counter - state.step
         }
       }
-      case 'STEP_CHANGE': {
+      case ACTION_TYPES.STEP_CHANGE: {
         const {value} = action;
         return {
           ...state,

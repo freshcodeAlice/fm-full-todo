@@ -19,7 +19,7 @@ export const decrementAction = () => {
 
 export const changeStepAction = (value) => {
     return ({
-        type: 'STEP_CHANGE',
+        type: ACTION_TYPES.STEP_CHANGE,
         value
     })
 }

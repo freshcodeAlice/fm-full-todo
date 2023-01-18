@@ -6,6 +6,11 @@ const instance = axios.create({
     baseURL: CONSTANTS.API_BASE
 });
 
+export const exampleAPI = async (counter) => {
+    const {data} = await instance.post('/example/counter', {counter});
+    return data;
+}
+
 
 
 /* Auth API */

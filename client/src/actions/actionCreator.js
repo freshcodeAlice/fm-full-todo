@@ -23,3 +23,28 @@ export const changeStepAction = (value) => {
         value
     })
 }
+
+
+//////Requests
+
+
+export const requestCounterFetching = (serverData) => {
+    return ({
+        type: ACTION_TYPES.REQUEST_COUNTER_FETCHING,
+        serverData
+    })
+}
+
+export const requestCounterSuccess = (data) => {
+    return ({
+        type: ACTION_TYPES.REQUEST_COUNTER_SUCCESS,
+        data
+    })
+}
+
+export const requestCounterError = (error) => {
+    return ({
+        type: ACTION_TYPES.REQUEST_COUNTER_ERROR,
+        error
+    })
+}

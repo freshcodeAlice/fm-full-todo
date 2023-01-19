@@ -7,7 +7,7 @@ import history from '../../BrowserHistory';
 
 
 const Home = (props) => {
-    const [state, setState] = useState();
+    const [state, setState] = useState(true);
     
     const buttonHandler = () => {
         setState(state => !state);

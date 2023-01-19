@@ -4,26 +4,19 @@ import Home from './pages/Home/Home';
 import TodoPage from './pages/TodoPage';
 import './App.css';
 import {authUser} from './api/userApi';
+import {connect} from 'react-redux';
+import {authUserRequest} from './actions/actionCreator';
 
 import history from './BrowserHistory';
 
-function App() {
+function App(props) {
 
 
-//   useEffect(() => {
-//     // if(!user) {
-//     //         //// робимо запит на отримання юзера
-//     //         authUser()
-//     //         .then(userData => {
-//     //           // props.sendUser(userData.data);
-//     //           setUser(userData.data);
-//     //         }).catch(error => {
-//     //             // якщо токен невалідний - перенаправляємо на авторизацію
-//     //             history.push('/');
-//     //         })
-//     //     }
-   
-// }, []);
+  useEffect(() => {
+       if(!props.user) {
+        props.authUserRequest();
+       }
+}, []);
 
 
   return (
@@ -36,4 +29,10 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = ({user}) => ({user});
+
+const mapDispatchToProps = {
+  authUserRequest
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

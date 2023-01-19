@@ -18,7 +18,12 @@ export const registerUser = async (userData) => await instance.post('/users/sign
 
 export const loginUser = async (userData) => await instance.post('/users/sign-in', userData);
 
+export const authUser = async () => await instance.get('/users/');
 
+
+export const logOut = async () => {
+    localStorage.clear();
+}
 
 instance.interceptors.request.use((config) => {
     const accessToken = localStorage.getItem('accessToken');

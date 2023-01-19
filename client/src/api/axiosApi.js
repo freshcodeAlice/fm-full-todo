@@ -46,16 +46,18 @@ instance.interceptors.response.use((response) => {
     return response
 }, (err) => {
     if (err.response.status === 403 && localStorage.getItem('refreshToken')) {
-    //    refreshUser().then((data) => {
-    //        console.log(err.request.open());
-    //    });
-        refreshUser();
-    }
-    if (err.response.status === 401) {
+        console.log(err);
+    console.log('REFRESH');
+     return refreshUser().then(() => {
+        console.log('RETRY');
+       return instance(err.config);
+      })
+    } else if (err.response.status === 401) {
+        logOut();
         history.replace('/');
+    } else {
+        return Promise.reject(err);
     }
-
-    return Promise.reject(err);
 })
 
 

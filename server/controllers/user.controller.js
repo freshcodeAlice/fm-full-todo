@@ -90,7 +90,8 @@ module.exports.refreshSession = async (req, res, next) => {
             const foundUser = await User.findOne({ email: verifyResult.email });
             const rTFromDB = await RefreshToken.findOne({ $and: [{ token: refreshToken }, { userId: foundUser._id }] });
             if (rTFromDB) {
-                const removeResult = await rTFromDB.remove();
+                const removeResult = await rTFromDB.deleteOne();
+                console.log('REMOVE RESULT -> ', removeResult);
                 const newAccessToken = await createAccessToken({ userId: foundUser._id, email: foundUser.email });
                 const newRefreshToken = await createRefreshToken({ userId: foundUser._id, email: foundUser.email });
                 const addedToken = await RefreshToken.create({
@@ -105,7 +106,7 @@ module.exports.refreshSession = async (req, res, next) => {
                     }
                 });
             } else {
-                res.status(404).send();
+                throw new RefreshTokenError('Token not found');
             }
 
 

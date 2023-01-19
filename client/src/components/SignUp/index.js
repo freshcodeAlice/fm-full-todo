@@ -1,8 +1,8 @@
 import React from 'react';
 import {Formik, Form, Field} from 'formik';
 import {format} from 'date-fns';
-// import {registerUser} from '../../api/userApi';
-import { registerUser } from '../../api/axiosApi';
+import {registerUserRequest} from '../../actions/actionCreator';
+import {connect} from 'react-redux';
 
 const SignUp = (props) => {
 
@@ -15,8 +15,7 @@ const initialValues = {
 }
 
 const onSubmit = (values, actions) => {
-    props.sendData({callback: registerUser,
-                        values});
+    props.registerUserRequest(values);
 }
 
 
@@ -41,4 +40,8 @@ const onSubmit = (values, actions) => {
     );
 }
 
-export default SignUp;
+const mapDispatchToProps = {
+    registerUserRequest
+}
+
+export default connect(null, mapDispatchToProps)(SignUp);

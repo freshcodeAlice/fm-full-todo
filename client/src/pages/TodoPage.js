@@ -1,54 +1,42 @@
 import React, {useState, useEffect} from 'react';
 import TodoList from '../components/TodoList';
-// import {getTasks, createTask, deleteTask} from '../api/taskApi';
-// import {authUser} from '../api/userApi';
 import ToDoForm from '../components/ToDoForm';
-import {getTask, createTask, deleteTask} from '../api/axiosApi';
+import {getTasksRequest, createTaskRequest, deleteTaskRequest} from '../actions/actionCreator';
+import { connect } from 'react-redux';
 
 const TodoPage = (props) => {
-    const [todos, setTodos] = useState([]);
 
     useEffect(()=>{
-        getTask()
-        .then(({data: {data}}) => {
-         setTodos(data);
-        })
-        .catch(error => {
-         console.error(error);
-        })
+        props.getTasksRequest();
     }, []);
 
     const getNewTd = (data) => {
-        createTask({
+        props.createTaskRequest({
             status: 'new',
-            ...data 
-        }).then(({data: {data: createdTask} })=> {
-            const newTodo = [...todos, createdTask];
-            setTodos(newTodo);
-        }).catch(error => {
-            console.error(error);
-        })
+            ...data
+        });
     }
 
 
     const delTask = (id) => {
-        deleteTask(id)
-        .then(({data: {data: deletedTask}}) => {
-            const updatedTask = todos.filter(td => td._id !== deletedTask._id);
-            setTodos(updatedTask);
-        })
-        .catch(error => {
-            console.log(error);
-        })
+        props.deleteTaskRequest(id);
     }
 
     return (
         <div>
             <h1>ToDo List</h1>
             <ToDoForm sendData={getNewTd}/>
-            <TodoList todos={todos} delCallback={delTask}/>
+            <TodoList todos={props.tasks} delCallback={delTask}/>
         </div>
     );
 }
 
-export default TodoPage;
+const mapStateToProps = ({tasks}) => ({tasks});
+
+const mapDispatchToProps = {
+    getTasksRequest, 
+    createTaskRequest, 
+    deleteTaskRequest
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TodoPage);

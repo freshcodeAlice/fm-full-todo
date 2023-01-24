@@ -28,7 +28,7 @@ export function* authSaga(action) {
         const {data: {data}} = yield authUser();
         yield put(authUserSuccess(data));
    } catch(error) {
-       yield put(authUserError(error.response.data.error));
+       yield put(authUserError(error));
    }
 }
 

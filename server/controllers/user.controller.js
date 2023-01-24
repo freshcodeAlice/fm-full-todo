@@ -6,7 +6,6 @@ const { createAccessToken, verifyAccessToken, createRefreshToken, verifyRefreshT
 module.exports.registrationUser = async (req, res, next) => {
     try {
         const { body, passwordHash } = req;
-        console.log(body);
         const createdUser = await User.create({ ...body, passwordHash });
         //       const token = await createAccessToken({userId: createdUser._id, email: createdUser.email});
         res.status(201).send({ data: createdUser })
@@ -23,10 +22,10 @@ module.exports.loginUser = async (req, res, next) => {
             email: body.email
         });
         if (foundUser) {
-            console.log(body.password);
-            console.log(passwordHash);
+
+  
             const result = await bcrypt.compare(body.password, foundUser.passwordHash);
-            console.log(result);
+ 
              if(result) {
             const accessToken = await createAccessToken({ userId: foundUser._id, email: foundUser.email });
             const refreshToken = await createRefreshToken({ userId: foundUser._id, email: foundUser.email });
@@ -91,7 +90,7 @@ module.exports.refreshSession = async (req, res, next) => {
             const rTFromDB = await RefreshToken.findOne({ $and: [{ token: refreshToken }, { userId: foundUser._id }] });
             if (rTFromDB) {
                 const removeResult = await rTFromDB.deleteOne();
-                console.log('REMOVE RESULT -> ', removeResult);
+   
                 const newAccessToken = await createAccessToken({ userId: foundUser._id, email: foundUser.email });
                 const newRefreshToken = await createRefreshToken({ userId: foundUser._id, email: foundUser.email });
                 const addedToken = await RefreshToken.create({
